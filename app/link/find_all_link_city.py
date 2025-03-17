@@ -1,19 +1,24 @@
 import pandas as pd 
-import os
-
-print("Chemin actuel :", os.getcwd())
+from bs4 import BeautifulSoup
+import requests
 
 def find_link(city):
-    
-    return f"https://www.numbeo.com/cost-of-living/in/{city.replace(' ', '-')}"
+    link = f"https://www.numbeo.com/cost-of-living/in/{city.replace(' ', '-')}"
+    header = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36' }
 
-df = pd.read_csv("./app/link/info_csv/city.csv")#, encoding="utf-8")
+    reponse = requests.get(link, headers=header)
+    soup = BeautifulSoup(reponse.content, 'html.parser')
+
+    if not soup.find("Cannot find city id for"):
+        return f"https://www.numbeo.com/cost-of-living/in/{city.replace(' ', '-')}-France"
+    else: return f"https://www.numbeo.com/cost-of-living/in/{city.replace(' ', '-')}"
 
 
+df = pd.read_csv("./app/link/city/city.csv", encoding="utf-8")
 
-print("Chemin actuel :", os.getcwd())
+
+df["Link"] = df["City"].apply(find_link)
 
 
-with open('./app/link/all_link_city.csv', "w", encoding="utf-8") as f:
-    for city in df.iloc[:, 0]: 
-        f.write(find_link(city) + "\n")  
+df.to_csv("./app/link/city/city.csv", index=False, encoding="utf-8")
+
