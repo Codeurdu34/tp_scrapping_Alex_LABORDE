@@ -1,14 +1,18 @@
 import pandas as pd 
 from bs4 import BeautifulSoup
 
-with open('./app/link/index_home/index.html') as fp:
-    soup = BeautifulSoup(fp, 'html.parser')
+def extract_all_city():
+    with open('./app/link/index_home/index.html') as fp:
+        soup = BeautifulSoup(fp, 'html.parser')
 
-select_tag = soup.find("select", {"name": "city"})
+    select_tag = soup.find("select", {"name": "city"})
 
-villes = [option.text.strip() for option in select_tag.find_all("option") if option.text.strip()]
+    villes = [option.text.strip() for option in select_tag.find_all("option") if option.text.strip()]
 
-df = pd.DataFrame({"City": villes})
+    # Supprimer "Select city" si présent
+    villes = [ville for ville in villes if "Select city" not in ville]
 
-# Sauvegarder en CSV
-df.to_csv('./app/link/city/city.csv', index=False, encoding="utf-8")
+    df = pd.DataFrame({"City": villes})
+
+    # Sauvegarder en CSV
+    df.to_csv('./app/link/city/city.csv', index=False, encoding="utf-8")

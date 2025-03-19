@@ -2,6 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd 
 
+import time
+
 def extract_html_all_city(): 
     headers = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36' }
 
@@ -29,3 +31,5 @@ def extract_html_all_city():
             print(f"Page enregistrée pour {city}")
         except requests.exceptions.RequestException as e:
             print(f"Erreur lors de l'extraction pour {city}: {e}")
+        
+        time.sleep(0.2)

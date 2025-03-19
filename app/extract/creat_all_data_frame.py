@@ -3,14 +3,25 @@ import re
 from bs4 import BeautifulSoup
 from app.extract.features.clean_data import clean_data
 from app.extract.features.min_max import trouver_prix_min_max
+import os 
 
 def creat_all_data_frame(city):
+    """Crée un DataFrame à partir d'un fichier HTML contenant les données de coût de la vie d'une ville."""
     
-    with open(f'./app/extract/all_index/index_{city}.html', encoding="utf-8") as fp:
-        soup = BeautifulSoup(fp, 'html.parser')
+    city_filename = city.replace(",", "").replace(" ", "_")  # Supprime les virgules et remplace espaces par "_"
+    file_path = f'./app/extract/all_index/index_{city_filename}.html'
+
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"Le fichier {file_path} n'existe pas.")
+
+    try:
+        with open(file_path, encoding="utf-8") as fp:
+            soup = BeautifulSoup(fp, 'html.parser')
+    except Exception as e:
+        raise RuntimeError(f"Erreur lors de la lecture du fichier {file_path} : {e}")
     
     lignes_sale = soup.select('tr')
-    
+
     desc = []
     prix = []
     prix_min_max = []
@@ -38,4 +49,9 @@ def creat_all_data_frame(city):
         "Prix Max (€)": prix_max
     })
     
+    # Supprimer les lignes vides
+    df.dropna(inplace=True)
+
+    print(f" Données extraites pour {city} - {len(df)} lignes enregistrées.")
+
     return df
