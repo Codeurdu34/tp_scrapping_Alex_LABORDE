@@ -1,0 +1,1 @@
+Il existe deux mains, le premier est a la racine du projet, il sert au scrapping. Le deuxièmes est dans le fichier ML il sert a toute la partie machine learning et l'imputation de donnée 

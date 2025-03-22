@@ -7,12 +7,14 @@ import os
 
 def creat_all_data_frame(city):
     
-    
-    city_filename = city.replace(",", "").replace(" ", "_")  # Supprime les virgules et remplace espaces par "_"
+    city_filename = city.replace(",", "").replace(" ", "_")  
     file_path = f'./app/extract/all_index/index_{city_filename}.html'
 
+    
     if not os.path.exists(file_path):
-        raise FileNotFoundError(f"Le fichier {file_path} n'existe pas.")
+        print(f"[AVERTISSEMENT] Le fichier {file_path} n'existe pas. On passe au suivant.")
+        
+        return None
 
     try:
         with open(file_path, encoding="utf-8") as fp:
@@ -26,6 +28,7 @@ def creat_all_data_frame(city):
     prix = []
     prix_min_max = []
 
+    # Parcours de chaque ligne du tableau pour extraire les données utiles
     for ligne in lignes_sale:
         cells = ligne.select('td')
         if len(cells) == 1:
@@ -52,6 +55,5 @@ def creat_all_data_frame(city):
     # Supprimer les lignes vides
     df.dropna(inplace=True)
 
-    print(f" Données extraites pour {city} - {len(df)} lignes enregistrées.")
-
+    print(f"Données extraites pour {city} - {len(df)} lignes enregistrées.")
     return df

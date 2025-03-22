@@ -9,9 +9,12 @@ def extract_html_all_city():
 
     df = pd.read_csv("./app/link/city/city.csv", encoding="utf-8")
 
-    # On parcourt chaque ligne du DataFrame
+    # On parcourt chaque ligne du DataFrame et on la nettoie 
     for _, row in df.iterrows():
-        city = row["City"].replace(" ", "_")  
+        city = row["City"].replace(" ", "-")  
+        city = row["City"].replace(",", "-") 
+        city = row["City"].replace("(", "") 
+        city = row["City"].replace(")", "")  
         url = row["Link"]
         
         try:
@@ -20,8 +23,7 @@ def extract_html_all_city():
             
             soup = BeautifulSoup(response.content, 'html.parser')
 
-            # Vérification : si le site renvoie un titre "Cannot find city id for ..."
-            # alors on ajoute "-France" à la fin de l'URL et on retente la requête
+            # Vérification : si le site renvoie un titre "Cannot find city id for ..." alors on ajoute "-France" à la fin de l'URL et on retente la requête
             if soup.find("h1", string=lambda text: text and "Cannot find city id for" in text):
                 url = url + "-France"  
                 response = requests.get(url, headers=headers)
