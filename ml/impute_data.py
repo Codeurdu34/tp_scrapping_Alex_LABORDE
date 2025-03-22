@@ -1,42 +1,26 @@
 import pandas as pd
 import numpy as np
 
-# Pour l'imputation avancée
+
 from sklearn.impute import KNNImputer, SimpleImputer
 from sklearn.experimental import enable_iterative_imputer
 from sklearn.impute import IterativeImputer
 
-def impute_missing_values(input_csv="data.csv", output_csv="data_imputed.csv"):
-    """
-    1) Charge le CSV (input_csv).
-    2) Détecte les colonnes numériques et catégorielles.
-    3) Impute les colonnes numériques avec un algorithme ML (IterativeImputer ou KNNImputer).
-    4) Impute les colonnes catégorielles avec la valeur la plus fréquente (SimpleImputer).
-    5) Enregistre le CSV complété (output_csv).
-    """
+def impute_missing_values(input_csv="ml/data/combined_city_data.csv", output_csv="ml/data/data_imputed.csv"):
 
-    # 1) Chargement du CSV
+    # Lit le CSV 'ml/data/combined_city_data.csv'
     df = pd.read_csv(input_csv)
-    print("=== Aperçu du dataset avant imputation ===")
-    print(df.head())
-    print(df.info())
+    
 
-    # 2) Séparer les colonnes selon leur type
-    #    - On considère "numériquement" toute colonne de type int ou float
+    # Identification des types de colonne qu'on veut manipuler 
     numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
-    #    - Les autres colonnes sont considérées comme catégorielles (object, string, bool, etc.)
     categorical_cols = df.select_dtypes(exclude=[np.number]).columns.tolist()
 
-    print(f"Colonnes numériques détectées : {numeric_cols}")
-    print(f"Colonnes catégorielles détectées : {categorical_cols}")
+    iter_imputer = IterativeImputer(random_state=42, max_iter=20)
 
-    # 3) Imputation pour les colonnes numériques
-    # Vous pouvez choisir : IterativeImputer (méthode MICE) ou KNNImputer
-    # -------------------
-    # Ex. : IterativeImputer
-    iter_imputer = IterativeImputer(random_state=42)
-    # ou : KNNImputer(n_neighbors=5)
-    # knn_imputer = KNNImputer(n_neighbors=5)
+    
+    # Imputation des valeurs manquantes dans les numeric_cols 
+    ''' l'imputation désigne le processus de remplacement des données manquantes avec des valeurs substituées'''
 
     if numeric_cols:
         df_numeric = df[numeric_cols]
@@ -45,8 +29,7 @@ def impute_missing_values(input_csv="data.csv", output_csv="data_imputed.csv"):
     else:
         print("Aucune colonne numérique à imputer.")
 
-    # 4) Imputation pour les colonnes catégorielles
-    # On peut simplement prendre la valeur la plus fréquente
+    # Imputation des valeurs manquantes dans les categorical_cols 
     if categorical_cols:
         cat_imputer = SimpleImputer(strategy='most_frequent')
         df_categorical = df[categorical_cols]
@@ -55,17 +38,7 @@ def impute_missing_values(input_csv="data.csv", output_csv="data_imputed.csv"):
     else:
         print("Aucune colonne catégorielle à imputer.")
 
-    # 5) Enregistrement du CSV complété
+    # Export du CSV imputé
     df.to_csv(output_csv, index=False, encoding='utf-8')
-    print(f"\n=== Imputation terminée. Fichier sauvegardé : {output_csv} ===")
-    print("=== Aperçu du dataset après imputation ===")
-    print(df.head())
+    print(f"\n→ Imputation terminée. Fichier sauvegardé : {output_csv}")
 
-if __name__ == "__main__":
-    # Adaptez les chemins selon votre environnement
-    impute_missing_values(
-        impute_missing_values(
-            input_csv="ml/data/combined_city_data.csv"
-            output_csv="ml/data/data_imputed.csv"
-        )
-    )

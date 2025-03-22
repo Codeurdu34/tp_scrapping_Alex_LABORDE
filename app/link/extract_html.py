@@ -14,3 +14,4 @@ def extract_html():
     f= open('./app/link/index_home/index.html', 'w')
     f.write(soup.prettify())
     f.close()
+    # À ce stade, le fichier 'index.html' contient une version "jolie" du code HTML de la page Numbeo sur le coût de la vie en France.

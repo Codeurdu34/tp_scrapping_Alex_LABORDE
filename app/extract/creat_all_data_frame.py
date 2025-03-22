@@ -6,7 +6,7 @@ from app.extract.features.min_max import trouver_prix_min_max
 import os 
 
 def creat_all_data_frame(city):
-    """Crée un DataFrame à partir d'un fichier HTML contenant les données de coût de la vie d'une ville."""
+    
     
     city_filename = city.replace(",", "").replace(" ", "_")  # Supprime les virgules et remplace espaces par "_"
     file_path = f'./app/extract/all_index/index_{city_filename}.html'

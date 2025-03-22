@@ -6,6 +6,7 @@ def combine_city_data():
     data_folder = r"D:\cours_Epsi\cours\cours_recupération_des _donner\tp_Alex_LABORDE\data\*.csv"
     output_file = r"D:\cours_Epsi\cours\cours_recupération_des _donner\tp_Alex_LABORDE\ml\data\combined_city_data.csv"
 
+    # glob.glob récupère la liste de tous les fichiers correspondant au pattern (*.csv)
     csv_files = glob.glob(data_folder)
     
 
@@ -15,6 +16,7 @@ def combine_city_data():
 
     all_dataframes = []
 
+    # Parcourt chaque fichier CSV récupéré
     for file in csv_files:
         try:
             df_temp = pd.read_csv(file)
@@ -46,11 +48,11 @@ def combine_city_data():
         except Exception as e:
             print(f"Erreur de lecture du fichier {file} : {e}")
 
-
+    # Concaténation de tous les DataFrames dans un seul DataFrame
     combined_df = pd.concat(all_dataframes, ignore_index=True)
     
 
-    
+    # On pivote
     grouped = combined_df.groupby(["city", "description"])["price"].mean().reset_index()
 
     
@@ -59,4 +61,5 @@ def combine_city_data():
     
     pivot_df.to_csv(output_file)
 
+# On appelle la fonction
 combine_city_data()
