@@ -23,5 +23,3 @@ def create_city_data_csv():
     # Sauvegarder le CSV avec les colonnes mais sans données
     combined_city_data.to_csv(output_file, index=True, encoding="utf-8")
 
-
-create_city_data_csv()

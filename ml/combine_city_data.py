@@ -61,5 +61,4 @@ def combine_city_data():
     
     pivot_df.to_csv(output_file)
 
-# On appelle la fonction
-combine_city_data()
+
