@@ -1,5 +1,8 @@
 import pandas as pd 
- 
+from ml.create_city_data_csv import create_city_data_csv
+from ml.combine_city_data import combine_city_data
+from ml.impute_data import impute_missing_values
+from ml.creat_description_data import create_descriptions_list 
 from app.link.extract_all_city import extract_all_city
 from app.link.extract_html import extract_html
 from app.extract.creat_all_data_frame import creat_all_data_frame
@@ -41,4 +44,12 @@ for city in cities_csv["City"]:
 
     
 
-
+create_descriptions_list()
+create_city_data_csv()
+    
+combine_city_data()
+# Un seul appel, avec virgule entre les paramètres
+impute_missing_values(
+    input_csv="ml/data/combined_city_data.csv",
+    output_csv="ml/data/data_imputed.csv"
+)
